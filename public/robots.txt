@@ -1,0 +1,12 @@
+# cyw-os.com - Architecture overview site
+# Allow indexing of public architecture content
+# Block internal/admin routes and any future detailed docs
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /docs/internal/
+Disallow: /_next/
+
+Sitemap: https://cyw-os.com/sitemap.xml
