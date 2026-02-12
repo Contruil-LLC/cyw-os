@@ -9,12 +9,16 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          dark: "#0d1117",
-          surface: "#161b22",
+          dark: "#0a0e14",
+          surface: "#111820",
+          panel: "#151d28",
           accent: "#58a6ff",
           green: "#3fb950",
           muted: "#8b949e",
           light: "#c9d1d9",
+          purple: "#bc6ff1",
+          cyan: "#00e5ff",
+          orange: "#ff6d00",
         },
       },
       fontFamily: {
