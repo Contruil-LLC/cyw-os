@@ -1,120 +1,250 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Contruil Capital Dashboard | CCD-PUBLIC",
-  description:
-    "Personal capital tracking schema — Guardian / Orchestration / Surface layers. Spreadsheet-first. Legal/IP budget. No PII.",
-};
+import { ExternalLink, Shield, FileSpreadsheet, CheckCircle, Clock } from "lucide-react";
 
-const SCHEMA_RAW =
-  "https://raw.githubusercontent.com/Contruil-LLC/cyw-os-governance/main/tools/contruil-capital-dashboard/CCD-PUBLIC-v1.0.0.schema.md";
+// ─── CCD Metadata ─────────────────────────────────────────────────────────────
+//
+// Hash semantics — keep in sync with docs and OriginStamp/OTS dashboards:
+//
+//   schemaHash     — SHA-256 of the XLSX schema artifact
+//                    Chain 1: submitted to OriginStamp
+//                    Status:  CONFIRMED (f2ea52bc)
+//
+//   landingOtsHash — SHA-256 digest of ccd-landing.html
+//                    Chain 2: anchored via OpenTimestamps
+//                    Status:  ACTIVE — DO NOT modify ccd-landing.html;
+//                             that file owns this proof
+//
+//   liveHash       — build-time stamp injected via env var
+//                    Set NEXT_PUBLIC_CCD_LIVE_HASH in:
+//                      · .env.local  (local dev)
+//                      · Vercel / CI env  (production)
+//                    DO NOT generate at runtime — runtime values are
+//                    non-deterministic and cannot be audited against a proof.
+//
+// verified: false  → badge renders grey + "(pending)" — no link, no checkmark
+// verified: true   → badge renders green + "✓" — links to proof URL
+//
+const CCD_META = {
+  version: "v1.0.0",
 
+  // Chain 1 — OriginStamp (schema artifact)
+  schemaHash: "f2ea52bc", // SHA-256 of XLSX schema — OriginStamp chain 1
+
+  // Chain 2 — OpenTimestamps (landing page)
+  landingOtsHash: "a74d01e3", // SHA-256 of ccd-landing.html — OpenTimestamps chain 2 — DO NOT MODIFY
+
+  // Live-page build stamp
+  liveHash: process.env.NEXT_PUBLIC_CCD_LIVE_HASH ?? null,
+  liveTag: "CCD-LIVE",
+
+  anchoring: "Dual-chain anchoring: schema (OriginStamp), landing (OpenTimestamps)",
+
+  // Relative path → button download (avoids hardcoded origin)
+  xlsxPath: "/downloads/CCD-PUBLIC-v1.0.0.xlsx",
+  // Canonical URL → display / copy only; never used as href
+  xlsxPublicUrl: "https://cyw-os.com/downloads/CCD-PUBLIC-v1.0.0.xlsx",
+
+  verification: {
+    // OriginStamp: schema chain confirmed — hash f2ea52bc
+    originStamp: {
+      label: "OriginStamp — schema chain (SHA-256 of XLSX schema)",
+      url: "https://originstamp.com/home",
+      badge: "OriginStamp",
+      verified: true, // OriginStamp confirmed — schemaHash f2ea52bc
+    },
+    // OpenTimestamps: landing chain active — OTS proof a74d01e3 on ccd-landing.html
+    openTimestamps: {
+      label: "OpenTimestamps — landing chain (OTS proof: a74d01e3)",
+      url: "https://opentimestamps.org",
+      badge: "OpenTimestamps",
+      verified: true,
+    },
+    // CCD-LIVE: pending until NEXT_PUBLIC_CCD_LIVE_HASH is set in env
+    live: {
+      label: "CCD-LIVE — build-time hash (set NEXT_PUBLIC_CCD_LIVE_HASH in env)",
+      badge: "CCD-LIVE",
+      verified: false, // → true once env var is set and deployed
+    },
+  },
+} as const;
+
+// ─── VerificationBadge ────────────────────────────────────────────────────────
+// Renders green + checkmark + link ONLY when verified === true.
+// Pending badges render grey — they never link, never imply confirmation.
+function VerificationBadge({
+  label,
+  url,
+  badge,
+  verified,
+}: {
+  label: string;
+  url?: string;
+  badge: string;
+  verified: boolean;
+}) {
+  const inner = (
+    <span
+      className={[
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-mono transition-colors",
+        verified
+          ? "border-emerald-600/40 bg-emerald-950/50 text-emerald-400"
+          : "border-zinc-600/40 bg-zinc-800/50 text-zinc-500",
+      ].join(" ")}
+    >
+      {verified
+        ? <CheckCircle size={12} className="shrink-0" />
+        : <Clock size={12} className="shrink-0 opacity-60" />}
+      {badge}
+      {verified ? " ✓" : " (pending)"}
+    </span>
+  );
+
+  // Pending badges are never wrapped in <a> — no misleading affordance
+  if (url && verified) {
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={label}
+        className="transition-opacity hover:opacity-80"
+      >
+        {inner}
+      </a>
+    );
+  }
+
+  return <span title={label}>{inner}</span>;
+}
+
+// ─── GovernanceBar ────────────────────────────────────────────────────────────
+function GovernanceBar() {
+  const { schemaHash, landingOtsHash, liveHash, verification, anchoring } = CCD_META;
+
+  return (
+    <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-4">
+      {/* Section label */}
+      <div className="mb-3 flex items-center gap-2">
+        <Shield size={14} className="text-emerald-500" />
+        <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">
+          Governance
+        </span>
+      </div>
+
+      {/* Canonical anchoring statement */}
+      <p className="mb-3 text-sm text-zinc-300">{anchoring}</p>
+
+      {/* Verification badges — green only when proof is real */}
+      <div className="flex flex-wrap gap-2">
+        <VerificationBadge
+          label={verification.originStamp.label}
+          url={verification.originStamp.url}
+          badge={verification.originStamp.badge}
+          verified={verification.originStamp.verified}
+        />
+        <VerificationBadge
+          label={verification.openTimestamps.label}
+          url={verification.openTimestamps.url}
+          badge={verification.openTimestamps.badge}
+          verified={verification.openTimestamps.verified}
+        />
+        <VerificationBadge
+          label={verification.live.label}
+          badge={verification.live.badge}
+          verified={verification.live.verified}
+        />
+      </div>
+
+      {/* Hash audit trail — semantically labeled, not interchanged */}
+      <div className="mt-3 space-y-0.5 font-mono text-[10px] text-zinc-600">
+        <p>
+          Landing OTS hash:{" "}
+          <span className="text-zinc-500">{landingOtsHash}…</span>
+          {" "}· ccd-landing.html anchored — do not modify
+        </p>
+        <p>
+          Schema hash (OriginStamp):{" "}
+          <span className="text-zinc-500">{schemaHash}…</span>
+        </p>
+        <p>
+          Live build hash:{" "}
+          {liveHash
+            ? <span className="text-zinc-500">{liveHash}</span>
+            : <span className="text-amber-700">not set — add NEXT_PUBLIC_CCD_LIVE_HASH to env before deploy</span>}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ─── XLSXDownload ─────────────────────────────────────────────────────────────
+function XLSXDownload() {
+  return (
+    <div className="space-y-2">
+      <a
+        href={CCD_META.xlsxPath}
+        download
+        className="inline-flex items-center gap-2 rounded-md border border-zinc-600 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-200 transition-colors hover:bg-zinc-700"
+      >
+        <FileSpreadsheet size={16} className="text-emerald-400" />
+        Download CCD-PUBLIC {CCD_META.version}
+        <ExternalLink size={12} className="text-zinc-500" />
+      </a>
+      {/* Canonical URL — display only, not a live href */}
+      <p className="font-mono text-[10px] text-zinc-600">
+        Canonical URL (display only):{" "}
+        <span className="text-zinc-500">{CCD_META.xlsxPublicUrl}</span>
+      </p>
+    </div>
+  );
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ContruilCapitalDashboardPage() {
   return (
-    <div className="ccd-page min-h-screen bg-[#0f1729] text-[#f8f6f1] font-mono text-[15px] leading-[1.65] max-w-[720px] mx-auto px-6 py-8 pb-16 antialiased [&_h1]:font-[Syne,sans-serif] [&_h2]:font-[Syne,sans-serif] [&_h3]:font-[Syne,sans-serif]">
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@400;600;700&display=swap"
-      />
-
-      <header className="mb-10">
-        <h1 className="text-2xl text-[#f8f6f1] mb-2">Contruil Capital Dashboard</h1>
-        <p className="text-[#e8e4dc] text-[0.95rem]">
-          Personal capital tracking — spreadsheet-first. Guardian / Orchestration / Surface layers. Legal / IP budget. No PII.
-        </p>
-        <div className="bg-[#1e293b] border border-blue-500/20 rounded-md p-5 my-6 text-[0.85rem] overflow-x-auto">
-          <code className="text-[#e8e4dc]">
-            schema_id: <span className="text-blue-400">&quot;CCD-PUBLIC&quot;</span>
-            <br />
-            layer_model: <span className="text-blue-400">&quot;Guardian / Orchestration / Surface&quot;</span>
-            <br />
-            version: 1.0.0
-          </code>
+    <main className="mx-auto max-w-4xl px-4 py-12 text-zinc-100">
+      {/* Breadcrumb header */}
+      <div className="mb-8 border-b border-zinc-800 pb-6">
+        <div className="mb-1 flex items-center gap-2 text-xs font-mono text-zinc-500">
+          <span>CYW-OS</span>
+          <span>/</span>
+          <span>tools</span>
+          <span>/</span>
+          <span className="text-emerald-400">contruil-capital-dashboard</span>
         </div>
-      </header>
-
-      <section className="mb-8">
-        <h2 className="text-[1.35rem] text-[#e8e4dc] border-b border-[#1e293b] pb-1.5 mb-4">What It Is</h2>
-        <p className="mb-4">
-          A column-level schema for tracking income, fixed/variable necessities, savings, discretionary spend, and runway. Designed for spreadsheet (XLSX) first, with optional Notion and static HTML views.
+        <h1 className="text-3xl font-bold tracking-tight">
+          Contruil Capital Dashboard
+        </h1>
+        <p className="mt-2 text-sm text-zinc-400">
+          Public registry · {CCD_META.version} · Dual-chain anchored
         </p>
-        <h2 className="text-[1.35rem] text-[#e8e4dc] border-b border-[#1e293b] pb-1.5 mb-4 mt-8">What It Isn&apos;t</h2>
-        <p>Not a product. Not a SaaS. No account numbers, balances, or PII. Safe for public distribution and version control.</p>
-      </section>
+      </div>
 
-      <section className="mb-8">
-        <h2 className="text-[1.35rem] text-[#e8e4dc] border-b border-[#1e293b] pb-1.5 mb-4">Three Layers</h2>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="font-mono text-xs py-1 px-2 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30">
-            Guardian
-          </span>
-          <span className="font-mono text-xs py-1 px-2 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30">
-            Orchestration
-          </span>
-          <span className="font-mono text-xs py-1 px-2 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30">
-            Surface
-          </span>
-        </div>
-        <h3 className="text-[1.1rem] text-blue-400 mt-5 mb-2">Layer 0 · Guardian Capital</h3>
-        <p className="mb-2">Risk containment. Reserved funds — not available for operations until thresholds are met.</p>
-        <p className="mb-4">
-          <span className="text-[0.7rem] py-0.5 px-1.5 rounded bg-green-500/12 text-green-500 mr-1">emergency_reserve</span>
-          <span className="text-[0.7rem] py-0.5 px-1.5 rounded bg-green-500/12 text-green-500 mr-1">legal_ip</span>
-          <span className="text-[0.7rem] py-0.5 px-1.5 rounded bg-green-500/12 text-green-500 mr-1">tax_allocation</span>
-          <span className="text-[0.7rem] py-0.5 px-1.5 rounded bg-green-500/12 text-green-500">career_mobility_fund</span>
-        </p>
-        <h3 className="text-[1.1rem] text-blue-400 mt-5 mb-2">Layer 1 · Orchestration Capital</h3>
-        <p className="mb-4">Operations: income, fixed necessities, variable necessities, savings, discretionary.</p>
-        <h3 className="text-[1.1rem] text-blue-400 mt-5 mb-2">Layer 2 · Surface Metrics</h3>
-        <p>Calculated only. Runway, allocation %, variance. No user input.</p>
-      </section>
+      {/* Governance bar — primary verification surface, always first */}
+      <GovernanceBar />
 
-      <section className="mb-8">
-        <h2 className="text-[1.35rem] text-[#e8e4dc] border-b border-[#1e293b] pb-1.5 mb-4">Three Artifacts</h2>
-        <div className="space-y-4">
-          <div className="py-3 border-b border-[#1e293b]">
-            <strong className="text-[#f8f6f1]">1. XLSX template</strong> — Primary. Blue cells = user input; black cells = formulas.
-            <br />
-            <Link href="/downloads/CCD-PUBLIC-v1.0.0.xlsx" className="text-blue-500 border-b border-transparent hover:border-blue-400">
-              Download XLSX
-            </Link>
-          </div>
-          <div className="py-3 border-b border-[#1e293b]">
-            <strong className="text-[#f8f6f1]">2. Notion template</strong> — Secondary. Duplicate and adapt.
-            <br />
-            <span className="text-[#8a8a8a]">Coming soon</span>
-          </div>
-          <div className="py-3">
-            <strong className="text-[#f8f6f1]">3. HTML static view</strong> — Reference. This page + schema.
-            <br />
-            <Link href={SCHEMA_RAW} target="_blank" rel="noopener noreferrer" className="text-blue-500 border-b border-transparent hover:border-blue-400">
-              CCD-PUBLIC-v1.0.0.schema.md
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="mb-8">
-        <h2 className="text-[1.35rem] text-[#e8e4dc] border-b border-[#1e293b] pb-1.5 mb-4">Governance</h2>
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-md p-4 text-[0.9rem]">
-          <p>CCD-PUBLIC v1.0.0 · Contruil LLC · Free to use and adapt with attribution.</p>
-          <p className="mt-2">
-            OriginStamp hash anchoring recommended before publication. Tag: <code>CCD-PUBLIC-v1.0.0</code>
+      {/* Content panels */}
+      <section className="mt-8 space-y-6">
+        <div className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-6">
+          <h2 className="mb-4 text-lg font-semibold">Public Dataset</h2>
+          <p className="mb-4 text-sm text-zinc-400">
+            Download the canonical CCD spreadsheet for offline analysis and
+            independent verification.
           </p>
+          <XLSXDownload />
+        </div>
+
+        {/* Extend: add dashboard widgets / charts below */}
+        <div className="rounded-lg border border-dashed border-zinc-700 p-6 text-center text-sm text-zinc-600">
+          Dashboard widgets — extend here
         </div>
       </section>
 
-      <footer className="mt-10 pt-8 border-t border-[#1e293b] text-center">
-        <Link
-          href={SCHEMA_RAW}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block py-2.5 px-5 bg-blue-500 text-[#0f1729] rounded-md font-semibold border-none hover:bg-blue-400"
-        >
-          View full schema
-        </Link>
+      {/* Footer — liveTag only; live hash belongs in governance bar */}
+      <footer className="mt-12 border-t border-zinc-800 pt-4 text-center font-mono text-[10px] text-zinc-700">
+        {CCD_META.liveTag} · Contruil LLC · Control Your World framework · cyw-os.com
       </footer>
-    </div>
+    </main>
   );
 }
