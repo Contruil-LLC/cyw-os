@@ -49,7 +49,7 @@ const CCD_META = {
     // OriginStamp: schema chain confirmed — hash f2ea52bc
     originStamp: {
       label: "OriginStamp — schema chain (SHA-256 of XLSX schema)",
-      url: "https://originstamp.com/home",
+      url: "https://originstamp.org/details/189c61363d8a7118be620c44c3cb21328f35eb51f5d904a917ca9253ed900262",
       badge: "OriginStamp",
       verified: true, // OriginStamp confirmed — schemaHash f2ea52bc
     },
