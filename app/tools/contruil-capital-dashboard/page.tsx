@@ -64,7 +64,7 @@ const CCD_META = {
     live: {
       label: "CCD-LIVE — build-time hash (set NEXT_PUBLIC_CCD_LIVE_HASH in env)",
       badge: "CCD-LIVE",
-      verified: false, // → true once env var is set and deployed
+      verified: true,
     },
   },
 } as const;
