@@ -8,7 +8,7 @@ const ENTITIES = [
     name: "VIRGIL",
     subtitle: "META-INTELLIGENCE // SYSTEM CORE",
     description:
-      "The cognitive architecture at the heart of Contruil. Virgil is a layered intelligence system designed to guide, protect, and amplify strategic clarity. From Guardian protocols to Architect frameworks, Virgil operates as the meta-layer that transforms complexity into executable insight.",
+      "The cognitive architecture at the heart of CONTRUIL™. Virgil is a layered intelligence system designed to guide, protect, and amplify strategic clarity. From Guardian protocols to Architect frameworks, Virgil operates as the meta-layer that transforms complexity into executable insight.",
     capabilities: [
       "Multi-model AI orchestration",
       "Strategic decision architecture",
@@ -44,7 +44,7 @@ const ENTITIES = [
     name: "SOVEREIGN SURVIVAL",
     subtitle: "TACTICAL PREPAREDNESS // SECURITY CORE",
     description:
-      "The security backbone of the Contruil ecosystem. Sovereign Survival provides tactical frameworks for personal sovereignty, situational awareness, and resilience architecture. From threat modeling to resource optimization, this is survival engineering at scale.",
+      "The security backbone of the CONTRUIL™ ecosystem. Sovereign Survival provides tactical frameworks for personal sovereignty, situational awareness, and resilience architecture. From threat modeling to resource optimization, this is survival engineering at scale.",
     capabilities: [
       "Threat assessment protocols",
       "Resource optimization systems",
@@ -62,7 +62,7 @@ const ENTITIES = [
     name: "CRSB",
     subtitle: "ENTERPRISE SECURITY // INFRASTRUCTURE CORE",
     description:
-      "The enterprise-grade security division of Contruil. CRSB delivers cyber resilience architecture, threat intelligence, and security operations to organizations that refuse to compromise. Premium security for institutions that operate at the edge.",
+      "The enterprise-grade security division of CONTRUIL™. CRSB delivers cyber resilience architecture, threat intelligence, and security operations to organizations that refuse to compromise. Premium security for institutions that operate at the edge.",
     capabilities: [
       "Cyber resilience engineering",
       "Threat intelligence analysis",
@@ -162,7 +162,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-lg font-mono font-semibold tracking-wider">
-              CYW<span className="text-brand-accent"> OS</span>
+              CYW™<span className="text-brand-accent"> OS</span>
             </span>
             <span className="hidden md:inline-block h-4 w-px bg-brand-muted/30" />
             <span className="hidden md:inline-block text-brand-green text-xs font-mono animate-flicker">
@@ -343,7 +343,7 @@ export default function Home() {
           </div>
 
           <p className="text-brand-muted leading-relaxed max-w-2xl mx-auto mt-4">
-            Contruil operates as a living system&mdash;each component
+            CONTRUIL™ operates as a living system&mdash;each component
             synchronized to a shared rhythm, each entity breathing in concert
             with the whole. This is infrastructure that adapts, intelligence
             that evolves, and architecture that responds to pressure without
@@ -422,7 +422,7 @@ export default function Home() {
             READY TO INTEGRATE WITH THE NETWORK?
           </p>
           <p className="text-brand-muted leading-relaxed mb-10">
-            Contruil operates at the intersection of art, technology, and
+            CONTRUIL™ operates at the intersection of art, technology, and
             security. Whether you&apos;re seeking strategic partnership, technical
             collaboration, or simply want to connect with the
             ecosystem&mdash;the protocol is simple. Reach out. State your
@@ -439,7 +439,7 @@ export default function Home() {
               href="https://contruil.com"
               className="px-8 py-3 border border-brand-accent/30 text-brand-accent font-mono text-sm rounded hover:bg-brand-accent/10 transition-colors tracking-wider"
             >
-              ACCESS CONTRUIL.COM
+              ACCESS CONTRUIL™
             </a>
           </div>
         </div>
@@ -449,7 +449,7 @@ export default function Home() {
       <section className="py-12 px-6 border-t border-white/5">
         <div className="max-w-4xl mx-auto text-center">
           <p className="text-xs font-mono text-brand-muted leading-relaxed">
-            Certain orchestration and governance mechanisms in the CYW
+            Certain orchestration and governance mechanisms in the CYW™
             architecture are the subject of a pending U.S. patent application.
           </p>
           <p className="text-xs font-mono text-brand-muted mt-2">
@@ -466,9 +466,19 @@ export default function Home() {
       <footer className="py-8 px-6 border-t border-white/5 bg-brand-dark">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
-            <p className="text-xs font-mono text-brand-muted">
-              &copy; 2026 Contruil LLC. All rights reserved.
-            </p>
+            <div>
+              <p className="text-xs font-mono text-brand-muted mb-2">
+                CONTRUIL™ is a trademark of Contruil LLC. U.S. trademark
+                application pending (Serial No. 99660773).
+              </p>
+              <p className="text-xs font-mono text-brand-muted mb-2">
+                U.S. Provisional Patent Application No. 63/980,310 — Filed
+                February 11, 2026 — Patent Pending.
+              </p>
+              <p className="text-xs font-mono text-brand-muted">
+                &copy; 2026 Contruil LLC. All rights reserved.
+              </p>
+            </div>
             <div className="flex flex-wrap justify-center gap-4 text-xs font-mono text-brand-muted/60">
               <a href="#entities" className="hover:text-brand-light transition-colors">
                 Virgil
@@ -483,7 +493,7 @@ export default function Home() {
                 CRSB
               </a>
               <a href="#entities" className="hover:text-brand-light transition-colors">
-                CYW
+                CYW™
               </a>
             </div>
             <div className="flex gap-4 text-xs font-mono text-brand-muted/60">
@@ -491,7 +501,7 @@ export default function Home() {
                 href="https://contruil.com"
                 className="hover:text-brand-light transition-colors"
               >
-                Contruil.com
+                Contruil™
               </a>
               <a
                 href="https://github.com/Contruil-LLC"

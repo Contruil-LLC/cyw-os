@@ -243,7 +243,7 @@ export default function ContruilCapitalDashboardPage() {
 
       {/* Footer — liveTag only; live hash belongs in governance bar */}
       <footer className="mt-12 border-t border-zinc-800 pt-4 text-center font-mono text-[10px] text-zinc-700">
-        {CCD_META.liveTag} · Contruil LLC · Control Your World framework · cyw-os.com
+        {CCD_META.liveTag} · Contruil LLC · CONTRUIL™ is a trademark of Contruil LLC (Serial No. 99660773). · cyw-os.com
       </footer>
     </main>
   );
