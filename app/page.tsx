@@ -213,12 +213,18 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl font-bold leading-tight mb-6 text-brand-light tracking-tight">
             CONTROL YOUR WORLD
           </h1>
-          <p className="text-lg text-brand-muted max-w-2xl mx-auto leading-relaxed mb-8">
+          <p className="text-lg text-brand-muted max-w-2xl mx-auto leading-relaxed mb-6">
             A sovereign AI orchestration layer. Five entities. Three production
             zones. One synchronized network. This is infrastructure that adapts,
             intelligence that evolves, and architecture that responds to pressure
             without fracture.
           </p>
+          <a
+            href="#connect"
+            className="inline-block text-brand-accent font-mono text-sm tracking-wider hover:text-brand-light transition-colors mb-8"
+          >
+            Request access · Book demo →
+          </a>
           <div className="flex justify-center gap-3 font-mono text-xs text-brand-muted/60">
             <span>SYS v1.0.0</span>
             <span className="text-brand-muted/20">|</span>
