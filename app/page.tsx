@@ -80,7 +80,7 @@ const ENTITIES = [
     name: "CONTROL YOUR WORLD",
     subtitle: "OPERATIONAL PHILOSOPHY // FOUNDATIONAL CORE",
     description:
-      "The doctrine that unifies the ecosystem. Control Your World is a philosophy of systematic sovereignty—the principle that awareness precedes action, that systems reveal truth, and that only stable structures scale. This is the operating system for human agency.",
+      "The doctrine that unifies the ecosystem. Control Your World (CYW™) is a philosophy of systematic sovereignty—the principle that awareness precedes action, that systems reveal truth, and that only stable structures scale. This is the operating system for human agency.",
     capabilities: [
       "Awareness precedes action",
       "Systems over symptoms",
